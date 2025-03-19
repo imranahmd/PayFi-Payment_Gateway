@@ -1,0 +1,118 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: pg-frontend-container
+    image: pg-frontend-image:latest 
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+      - service-registry
+      - config-server
+      - merchant-api
+      - admin-api
+      - transaction-api
+      - banking-api
+      - recurring-api
+      - reports-api
+    environment:
+      - REACT_APP_API_GATEWAY=https://dev.payfi.co.in/
+
+  banking-api:
+    build:
+      context: ./Backend/Spring-boot-Banking-main
+    container_name: banking-api-container
+    image: banking-api-image:latest
+    ports:
+      - "9000:9000"
+
+  api-gateway:
+    build:
+      context: ./Backend/apigateway
+    container_name: apigateway-api-container
+    image: apigateway-api-image:latest
+    ports:
+      - "8083:8083"
+    depends_on:
+      - service-registry
+      - config-server
+
+  service-registry:
+    build:
+      context: ./Backend/serviceregistry
+    container_name: serviceregistry-api-container
+    image: serviceregistry-api-image:latest
+    ports:
+      - "8761:8761"
+
+  config-server:
+    build:
+      context: ./Backend/configserver
+    container_name: configserver-api-container
+    image: configserver-api-image:latest
+    ports:
+      - "8084:8084"
+
+  merchant-api:
+    build:
+      context: ./Backend/merchant
+    container_name: merchant-api-container
+    image: merchant-api-image:latest
+    ports:
+      - "8081:8081"
+    depends_on:
+      - service-registry
+      - config-server
+
+  admin-api:
+    build:
+      context: ./Backend/admin
+    container_name: admin-api-container
+    image: admin-api-image:latest
+    ports:
+      - "8085:8080"
+    depends_on:
+      - service-registry
+      - config-server
+
+  transaction-api:
+    build:
+      context: ./Backend/transaction
+    container_name: transaction-api-container
+    image: transaction-api-image:latest
+    ports:
+      - "8082:8082"
+    depends_on:
+      - service-registry
+      - config-server
+      - banking-api
+  
+  recurring-api:
+    build:
+      context: ./Backend/recurring
+    container_name: recurring-api-container
+    image: recurring-api-image:latest
+    ports:
+      - "8087:8087"
+    depends_on:
+      - service-registry
+      - config-server
+      - banking-api
+      - transaction-api
+
+  reports-api:
+    build:
+      context: ./Backend/reports
+    container_name: reports-api-container
+    image: reports-api-image:latest
+    ports:
+      - "8089:8089"
+    depends_on:
+      - service-registry
+      - config-server
+      - banking-api
+      - transaction-api
+      - recurring-api

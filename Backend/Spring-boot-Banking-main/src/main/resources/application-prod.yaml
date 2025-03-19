@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: dummybank
+  datasource:
+    url: jdbc:mysql://35.154.88.220:3306/online_bank
+    username: newuser
+    password: nesdhvsdgh
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        default-schema: online_bank
+        storage: innodb
+
+server:
+  port: 9000
+
+my:
+  partnerreferencenumber: 34788441
+  partnername: Payfi
+  escrowAccountNumber: 87399435

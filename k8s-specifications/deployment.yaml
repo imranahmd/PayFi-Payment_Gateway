@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: pg-frontend-image:latest
+          image: imranahmad786/payfi-payment_gateway_frontend:latest
           ports:
             - containerPort: 3000
           env:
@@ -50,7 +50,7 @@ spec:
     spec:
       containers:
         - name: banking-api
-          image: banking-api-image:latest
+          image: imranahmad786/pg-banking-api:latest
           ports:
             - containerPort: 9000
 ---
@@ -83,7 +83,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: apigateway-api-image:latest
+          image: imranahmad786/pg-gateway-api:latest
           ports:
             - containerPort: 8083
 ---
@@ -116,7 +116,7 @@ spec:
     spec:
       containers:
         - name: service-registry
-          image: serviceregistry-api-image:latest
+          image: imranahmad786/pg-service-registry-api:latest
           ports:
             - containerPort: 8761
 ---
@@ -149,7 +149,7 @@ spec:
     spec:
       containers:
         - name: config-server
-          image: configserver-api-image:latest
+          image: imranahmad786/pg-config-server-api:latest
           ports:
             - containerPort: 8084
 ---
@@ -164,4 +164,103 @@ spec:
     - protocol: TCP
       port: 8084
       targetPort: 8084
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: merchant-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: merchant-api
+  template:
+    metadata:
+      labels:
+        app: merchant-api
+    spec:
+      containers:
+        - name: merchant-api
+          image: imranahmad786/pg-merchant-api:latest
+          ports:
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: merchant-api
+spec:
+  selector:
+    app: merchant-api
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-api
+  template:
+    metadata:
+      labels:
+        app: admin-api
+    spec:
+      containers:
+        - name: admin-api
+          image: imranahmad786/pg-admin-api:latest
+          ports:
+            - containerPort: 8085
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-api
+spec:
+  selector:
+    app: admin-api
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transaction-api
+  template:
+    metadata:
+      labels:
+        app: transaction-api
+    spec:
+      containers:
+        - name: transaction-api
+          image: imranahmad786/pg-transaction-api:latest
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-api
+spec:
+  selector:
+    app: transaction-api
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
   type: ClusterIP
